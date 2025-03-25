@@ -4,7 +4,7 @@
  Welcome to my urlShortner api project. In this project I implemented the User Authentication, Url Shortening, Admin Analytics Endpoints, and Database Schema. The database schema can be found in the dbschema.sql file and the API Documentation can be found in the .yaml file.
 
  **Setup**
- 1. Clone the project
+ 1. Clone the project and run npm i.
  2. Open the postman collection.
  3. Setup a local postgres database.
  4. Fill in the database details in config/db.ts.
