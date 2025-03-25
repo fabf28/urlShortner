@@ -1,4 +1,4 @@
-﻿# urlShortner
+﻿# Url Shortner Api
  **Introduction**
  
  Welcome to my urlShortner api project. In this project I implemented the User Authentication, Url Shortening, Admin Analytics Endpoints, and Database Schema. The database schema can be found in the dbschema.sql file and the API Documentation can be found in the .yaml file.
