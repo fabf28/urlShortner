@@ -1,0 +1,344 @@
+openapi: 3.0.4
+info:
+  title: URL Shortener API
+  version: 1.0.0
+  description: |
+    This API allows users to shorten URLs and retrieve analytics data.
+    It includes user registration, authentication (JWT), and admin analytics access.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /auth/signup:
+    post:
+      summary: Register a new user
+      description: Handles username and password validation and creates a new user if the username does not exist. New user is stored in Postgres Database where the password is hashed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '409':
+          description: Username exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Username already exists
+        '422':
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /auth/login:
+    post:
+      summary: Log In
+      description: Checks user credentials and returns a jwt token if login is successful.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful log in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successful log in
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+                
+        '404':
+          description: Failed Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Failed login
+
+  /url/shorten:
+    post:
+      summary: Shorten a URL (Users Only)
+      description: Authenticated users can shorten URLs. Uses user authentication middleware that verifies the token placed in the header.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - longUrl
+              properties:
+                longUrl:
+                  type: string
+                  example: https://example.com/some/very/long/url
+      responses:
+        '201':
+          description: URL shortened successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shortUrl:
+                    type: string
+                    example: https://favsurl.com/ERF0GXYWJuY
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No url was entered.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string  
+          
+
+  /url/{id}:
+    get:
+      summary: Redirect to the original long URL (Users Only)
+      description: Returns the original long url from the inputed short url alias. Uses user authentication middleware that verifies token inserted in the request header.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: ERF0GXYWJuY
+      responses:
+        '302':
+          description: Redirect to the original URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  longUrl:
+                    type: string
+                    example: https://example.com/some/very/long/url
+        '404':
+          description: Short URL not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No shortened url was provided.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: That shortened url doesn't exist.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string  
+  /analytics/{id}:
+    get:
+      summary: Retrieve analytics for a specific short URL (Admin Only)
+      description: Admin users can retrieve analytics for a specific short URL. Uses user authentication middleware that verifies a token inserted in the header. Also uses admin verication header that checks if the isadmin key in user information extracted from the token is true.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: abc123
+      responses:
+        '200':
+          description: Analytics data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_requests:
+                    type: string
+                  date_analytics:
+                    type: object
+                    properties:
+                      per_week:
+                        type: string
+                      per_month:
+                        type: string
+                      highest_week:
+                        type: string
+                      highest_month:
+                        type: string
+                      time_of_day_distr:
+                        type: string
+                  device_analytics:
+                    type: object
+                    properties:
+                      os_distr: 
+                        type: string
+                      device_distr: 
+                        type: string
+                  location_analytics:
+                    type: object
+                    properties:
+                      country_distr:
+                        type: string
+                      city_distr:
+                        type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+        '404':
+          description: Short URL not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: Inputed shortened url doesn't exist.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string  
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique incremented integer
+        username:
+          type: string
+          description: Unique name chosen by user
+        password:
+          type: string
+        isadmin:
+          type: boolean
+    Urls:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique 11 digit code that makes the short url alias
+        longUrl:
+          type: string
+          description: The long url that was shortened.
+    Logs:
+      type: object
+      description: Logs every request to access a long url from the shortened one.
+      properties:
+        log_id:
+          type: number
+          description: Unique incremented integer
+        url_id:
+          type: string
+          description: References id from urls table
+        device:
+          type: string
+          example: mobile
+        os:
+          type: string
+          example: windows
+        country:
+          type: string
+        city:
+          type: string
+        date:
+          type: string
+          format: date-time
+          description: The date and time the request log was made.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
