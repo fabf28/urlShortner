@@ -10,7 +10,7 @@
  4. You can now run the postman collection for testing or run each request in the collection individually.
 
 **Notes**
-- For the sake of simplicity, I committed the secret key and database link in the .env file but I understand this isn't indesstry practice.
+- For the sake of simplicity, I committed the secret key and database link in the .env file but I understand this isn't industry practice.
 - The postman collection is not the api documentation and is rather just for testing.
 - You must run the postman tests on desktop and not web to run on localhost.
 - Testing on localhost affects req ip so the program just uses 8.8.8.8 for everything for now.
