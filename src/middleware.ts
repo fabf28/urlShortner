@@ -20,7 +20,7 @@ export async function logger(req: Request, res: Response, next: NextFunction) {
     const details: LogInput = {
         url_id: id,
         device: dev.device.type || 'desktop',
-        os: dev.os.name,
+        os: dev.os.name || 'macOS',
         country: geo?.country_name,
         city: geo?.city
     }
