@@ -14,3 +14,4 @@
 - The postman collection is not the api documentation and is rather just for testing.
 - You must run the postman tests on desktop and not web to run on localhost.
 - Testing on localhost affects req ip so the program just uses 8.8.8.8 for everything for now which affects geographic logging.
+- I wasn't sure if using a shortened url requred authentication or not so i implemented both on seperate branches.
