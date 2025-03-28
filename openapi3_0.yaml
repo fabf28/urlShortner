@@ -159,10 +159,8 @@ paths:
 
   /url/{id}:
     get:
-      summary: Redirect to the original long URL (Users Only)
+      summary: Redirect to the original long URL 
       description: Returns the original long url from the inputed short url alias. Uses user authentication middleware that verifies token inserted in the request header.
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -210,6 +208,7 @@ paths:
                 properties:
                   message: 
                     type: string  
+
   /analytics/{id}:
     get:
       summary: Retrieve analytics for a specific short URL (Admin Only)

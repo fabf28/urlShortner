@@ -15,7 +15,7 @@ const PORT = 8080;
 app.use(express.json());
 app.use(useragent.express());
 app.use('/auth', authRoutes);
-app.use('/url', authenticator, userRoutes);
+app.use('/url', userRoutes);
 app.use('/analytics', authenticator, adminChecker, adminRoutes);
 
 app.listen(PORT,
