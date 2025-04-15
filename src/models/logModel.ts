@@ -48,6 +48,7 @@ export const LogModel = {
         return final;
     },
 
+    //returns a column with only entries from a specific url_id
     async findColumn(url_id: string, column: string): Promise<Array<string | unknown>> {
         const sql = `SELECT ${column} FROM logs WHERE url_id = $1`;
         const result = await pool.query(sql, [url_id]);
