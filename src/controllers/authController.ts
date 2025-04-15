@@ -3,6 +3,7 @@ import { AuthService } from "../services/authService";
 import jwt from "jsonwebtoken"
 
 
+
 export async function signUp(req: Request, res: Response) {
     const { username } = req.body;
     const { password } = req.body;

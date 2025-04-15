@@ -4,11 +4,13 @@ import { getWeek } from "date-fns";
 
 
 export const AdminService = {
+    //total num of requests
     async totRequests(url_id: string): Promise<number> {
         const numOfRequests = await LogModel.totRequests(url_id);
         return numOfRequests;
     },
 
+    //percent of a unique item in a column
     async percentOf(url_id: string, column: string, unique: string): Promise<number> {
         const numerator = await LogModel.totRequestsSpecific(url_id, column, unique);
         const denominator = await LogModel.totRequests(url_id);
@@ -16,11 +18,13 @@ export const AdminService = {
         return percent;
     },
 
+    //number of specific item in a list
     numberOf(list: Array<string>, specific: string): number {
         const total = list.filter(x => x === specific).length;
         return total;
     },
 
+    //percent of a specific item in a list
     percentOf2(list: Array<string>, specific: string): number {
         const denominator = list.length;
         const numerator = list.filter(x => x === specific).length;
@@ -42,6 +46,7 @@ export const AdminService = {
         return distr;
     },
 
+    //returns total requests per month
     async monthlyRequests(url_id: string) {
 
         //parsing dates for months and finding unique values
@@ -61,6 +66,7 @@ export const AdminService = {
         return distr;
     },
 
+    //returns total requests per week
     async weeklyRequests(url_id: string) {
 
         //parsing dates for weeks and finding unique values
@@ -80,21 +86,23 @@ export const AdminService = {
         return distr;
     },
 
+    //takes in the date and returns the time of day
     timeOfDay(date: Date) {
         const hours = date.getHours();
-        if (hours > 5) {
+        if (hours < 5) {
             return "night"
-        } else if (hours > 12) {
+        } else if (hours < 12) {
             return "morning";
-        } else if (hours > 16) {
+        } else if (hours < 16) {
             return "afternoon";
-        } else if (hours > 21) {
+        } else if (hours < 21) {
             return "evening";
-        } else if (hours >= 24) {
+        } else if (hours <= 24) {
             return "night";
         }
     },
 
+    //returns the time of day distr of requests
     async timeDistr(url_id: string) {
         //parsing dates for months and finding unique values
         const dates = await LogModel.findColumn(url_id, 'date');

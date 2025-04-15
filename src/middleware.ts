@@ -8,7 +8,7 @@ import * as UAParser from 'ua-parser-js';
 export async function logger(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
 
-    const ip = "8.8.8.8"; //for testing purposes
+    const ip = "8.8.8.8"; //for testing purposes - req.ip
     const ext_res = await axios.get(`https://ipapi.co/${ip}/json/`);
     const geo = ext_res.data;
 
