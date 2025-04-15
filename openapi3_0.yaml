@@ -159,7 +159,7 @@ paths:
 
   /url/{id}:
     get:
-      summary: Redirect to the original long URL 
+      summary: Redirect to the original long URL
       description: Returns the original long url from the inputed short url alias. Uses user authentication middleware that verifies token inserted in the request header.
       parameters:
         - name: id
@@ -199,16 +199,7 @@ paths:
                   message:
                     type: string
                     example: That shortened url doesn't exist.
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: 
-                    type: string  
-
+         
   /analytics/{id}:
     get:
       summary: Retrieve analytics for a specific short URL (Admin Only)
